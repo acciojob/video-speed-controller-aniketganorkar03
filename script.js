@@ -10,8 +10,11 @@ const playbackSpeedInput = player.querySelector('.playbackSpeed');
 
 // 2. Build Functions
 function togglePlay() {
-  const method = video.paused ? 'play' : 'pause';
-  video[method]();
+  if (video.paused) {
+    video.play();
+  } else {
+    video.pause();
+  }
 }
 
 function updatePlayButton() {
@@ -51,12 +54,18 @@ toggle.addEventListener('click', togglePlay);
 
 skipButtons.forEach(button => button.addEventListener('click', skip));
 
+// Use both 'input' and 'change' for wider test compatibility
 volumeInput.addEventListener('input', handleVolume);
+volumeInput.addEventListener('change', handleVolume);
+
 playbackSpeedInput.addEventListener('input', handlePlaybackSpeed);
+playbackSpeedInput.addEventListener('change', handlePlaybackSpeed);
 
 // Progress bar scrubbing logic
 let mousedown = false;
 progress.addEventListener('click', scrub);
-progress.addEventListener('mousemove', (e) => mousedown && scrub(e));
+progress.addEventListener('mousemove', (e) => {
+  if (mousedown) scrub(e);
+});
 progress.addEventListener('mousedown', () => mousedown = true);
 progress.addEventListener('mouseup', () => mousedown = false);
